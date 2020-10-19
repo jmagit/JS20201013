@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo AJAX</title>
+</head>
+
+<body>
+    <div id="menu">
+        <input id="btnGetText" type="button" value="GET TEXT">
+        <input id="btnGetJSON" type="button" value="GET JSON">
+        <input id="btnGetImg" type="button" value="GET IMG">
+        <input id="btnSend" type="button" value="SEND">
+    </div>
+
+    <img>
+
+    <div id="rslt">
+
+    </div>
+
+    <script>
+
+        document.getElementById('btnGetText').addEventListener('click', function () {
+            fetch('https://httpbin.org/get')
+                .then(response => response.text())
+                .then(body => {
+                    document.getElementById('rslt').textContent = body;
+                });
+        });
+        document.getElementById('btnGetJSON').addEventListener('click', function () {
+            fetch('https://httpbin.org/get')
+                .then(response => response.json())
+                .then(body => {
+                    let msg = `<h1>${body.url}:</h1>`
+                    msg += '<dl>';
+                    for (let item in body.headers) {
+                        msg += `<dt><b>${item}:</b></dt><dd>${body.headers[item]}</dd>`;
+                    }
+                    msg += '</dl>';
+                    document.getElementById('rslt').innerHTML = msg;
+                });
+        });
+        document.getElementById('btnGetImg').addEventListener('click', function () {
+            fetch('https://httpbin.org/image/png').then(function (response) {
+                if (response.ok) {
+                    response.blob().then(function (miBlob) {
+                        var miImagen = document.querySelector('img');
+                        var objectURL = URL.createObjectURL(miBlob);
+                        miImagen.src = objectURL;
+                    }).catch(function (error) {
+                        console.error('Error en los datos recibidos: ' + error.message);
+                    });
+                } else {
+                    console.error('Error ' + response.status + ': ' + response.statusText);
+                }
+            }).catch(function (error) {
+                console.error('Hubo un problema con la petición Fetch:' + error.message);
+            });
+        });
+        document.getElementById('btnSend').addEventListener('click', function () {
+            let data = { id: 1, nombre: 'uno' };
+            fetch('https://httpbin.org/post', {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                    'Content-Type': 'application/json'  //  'application/x-www-form-urlencoded'
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data) // requiere la cabecera "Content-Type"
+            }).then(response => response.text())
+                .then(body => {
+                    document.getElementById('rslt').textContent = body;
+                });
+        });
+
+    </script>
+</body>
+
+</html>

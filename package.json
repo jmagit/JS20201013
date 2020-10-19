@@ -1,0 +1,19 @@
+{
+  "name": "indra201013",
+  "version": "1.0.0",
+  "description": "Curso de JavaScript",
+  "main": "EjemplosSintaxis.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IconoTraining/JavaScript---INDRA.git"
+  },
+  "author": "Javier",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IconoTraining/JavaScript---INDRA/issues"
+  },
+  "homepage": "https://github.com/IconoTraining/JavaScript---INDRA#readme"
+}

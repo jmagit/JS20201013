@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demos DOM</title>
+</head>
+
+<body>
+    <div>
+        <p id="elParrafo">
+            <button id="btnEjemplo">Ejemplo</button>
+            <input class="digito" type="button" id="btn1" value="1">
+            <input class="digito" type="button" id="btn2" value="2">
+            <input class="digito" type="button" id="btn3" value="3">
+            <button id="btnPonselo">Ponselo</button>
+        </p>
+    </div>
+    <div id="sumario"></div>
+    <form action="https://httpbin.org/anything">
+        <div>
+            <div>Código</div>
+            <input type="number" id="id" name="id" value="-1" required min="0" max="100" data-label="Código">
+        </div>
+
+        <div id="elem">
+            <div id="elem-content">Nombre</div>
+            <input type="text" id="campo" name="nombre" value="Hola mundo" required minlength="2" maxlength="8"
+                pattern="[A-Z ]+" data-label="Nombre">
+        </div>
+        <div>
+            <button id="btnEnviar">Enviar</button>
+            <button id="btnManual">Manual</button>
+        </div>
+    </form>
+
+    <script>
+        let btns = document.querySelectorAll('button');
+        let cnsl = document.querySelectorAll('input[data-label]');
+
+        document.getElementById('btnEjemplo').addEventListener('click', function () {
+            let rslt = document.querySelector('#campo').value;
+            document.getElementsByName('nombre')[0].value = rslt.toUpperCase();
+        });
+        function cotilla(ev) {
+            alert(ev.target.value + ' en X: ' + ev.clientX + ' Y: ' + ev.clientY);
+            ev.target.removeEventListener('click', cotilla);
+            ev.target.disabled = true;
+            ev.stopPropagation();
+        }
+        function colorines(ev) {
+            if(ev.target.style.color === "red")
+                ev.target.style.color = "blue";
+            else
+                ev.target.style.color = "red";
+        }
+        (function () {
+            let btn = document.getElementById('btnPonselo');
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.digito').forEach(element => {
+                    element.addEventListener('click', cotilla);
+                    element.addEventListener('click', colorines);
+                    element.disabled = false;
+                });
+            });
+            btn.click();
+        })();
+
+        elParrafo.style.background = 'lightblue';
+
+        elParrafo.addEventListener('click', function(ev) { 
+            alert('Soy elParrafo');
+        });
+
+
+        document.querySelector('#campo').addEventListener('change', function(ev) {
+            if(localStorage)
+                localStorage.saludo = ev.target.value;
+            if (ev.target.value.startsWith('H')) {
+                ev.target.setCustomValidity('No puede empezar por H');
+            } else {
+                ev.target.setCustomValidity('');
+            }
+        });
+
+        if(localStorage && localStorage.saludo)
+            document.querySelector('#sumario').textContent = localStorage.saludo;
+            
+        document.querySelector('#btnManual').addEventListener('click', function(ev) {
+            if (document.forms[0].checkValidity()) {
+                document.querySelector('#sumario').textContent = ''; // Solo si es AJAX
+                document.forms[0].submit();
+            } else {
+                // ev.preventDefault();
+                let msg = '';
+                for(let item of document.forms[0].elements) { 
+                    if(!item.checkValidity())
+                        msg += `<li>${item.dataset.label}: ${item.validationMessage}</li>`;
+                }
+                document.querySelector('#sumario').innerHTML = `<h3>Sumario</h3><ul>${msg}</ul>`;
+            }
+        });
+
+        document.querySelector('form').addEventListener('submit', function (ev) {
+            // ...
+            if (!document.forms[0].checkValidity()) {
+                ev.preventDefault();
+            }
+        });
+    </script>
+</body>
+
+</html>

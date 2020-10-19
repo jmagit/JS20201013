@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demos</title>
+</head>
+
+<body>
+    <h1>Juego</h1>
+    <p>
+    <form>
+        <span id="pideNumero" hidden="true"></span>
+        <input type="number" id="numero" required min="0" max="100" hidden="true">
+        <button id="btnJugar">Empezar</button>
+        <span id="mensaje" hidden="true"></span>
+    </form>
+    </p>
+    <!-- <script src="EjemplosSintaxis.js"></script> -->
+    <script src="EjerciciosSintaxis.js"></script>
+    <script>
+        /*
+                JuegoDelNumero();
+                NumerosPrimos();
+                (function () {
+                    var primos = damePrimos(+prompt('Cuantos quieres: '));
+                    var literal = ' es primo';
+                    primos.forEach(function(element) {
+                        console.log(element + literal);
+                    });
+                    // primos.forEach(element => {
+                    //     console.log(element + ' es primo');
+                    // });
+                    // var t = dameArray(10, 0);
+                    // var tt = dameArray(1000, 'kk');
+                })();
+        */
+        /*
+        let idBuscado = 2;
+        let t = [{id: 1, nom: 'algo'}, {id: 2, nom: 'otro', met: () => id + ' ' + nom}];
+            
+        let fn = function(item) { return item.id == idBuscado; } 
+        let lamda = (item, otro) => {  return item.id == idBuscado; }; 
+
+        var reslt = t.find(fn);
+
+        var juego = new Juego(2, 100);
+        do {
+            do {
+                // var numeroLeido = prompt('Dame tu número (' + (juego.intentos + 1) + ' de ' + juego.DameMaxIntentos() +'):');
+                var numeroLeido = prompt(`Dame tu número ${juego.intentos + 1} de ${juego.DameMaxIntentos()}):`);
+                if (numeroLeido === null)
+                    break;
+                if (isNaN(parseInt(numeroLeido))) {
+                    alert('No es un número valido');
+                    continue;
+                }
+                try {
+                    juego.PruebaCon(+numeroLeido);
+                } catch (error) {
+                    alert('ERROR: ' + error.message + '\n' + juego.mensaje)
+                    break;
+                }
+                alert(juego.mensaje);
+            } while (juego.intentos < 10 && !juego.encontrado);
+            if (!confirm('¿Otra?'))
+                break;
+            juego.Inicializa();
+        } while (true);
+
+        var juego = new JuegoConClase(2, 100);
+        do {
+            do {
+                var numeroLeido = prompt(`Dame tu número ${juego.Intento} de ${juego.MaxIntentos}):`);
+                if (numeroLeido === null)
+                    break;
+                if (isNaN(parseInt(numeroLeido))) {
+                    alert('No es un número valido');
+                    continue;
+                }
+                try {
+                    juego.PruebaCon(+numeroLeido);
+                } catch (error) {
+                    alert('ERROR: ' + error.message + '\n' + juego.mensaje)
+                    break;
+                }
+                alert(juego.mensaje);
+            } while (juego.intentos < 10 && !juego.encontrado);
+            if (!confirm('¿Otra?'))
+                break;
+            juego.Inicializa();
+        } while (true);
+        */
+
+        var juego = new JuegoConClase(2, 100);
+
+        function Empezar(ev) {
+            juego.Inicializa();
+            pideNumero.hidden = false;
+            pideNumero.textContent = `Dame tu número ${juego.Intento} de ${juego.MaxIntentos}:`;
+            numero.value = null;
+            numero.hidden = false;
+            mensaje.textContent = null;
+            mensaje.hidden = false;
+            btnJugar.removeEventListener('click', Empezar);
+            btnJugar.textContent = 'Probar';
+            ev.preventDefault();
+        }
+        function FinalJuego() {
+            pideNumero.hidden = true;
+            numero.hidden = true;
+            btnJugar.textContent = 'Empezar de nuevo';
+            btnJugar.addEventListener('click', Empezar);
+        }
+
+        document.querySelector('form').addEventListener('submit', function (ev) {
+            if (document.forms[0].checkValidity()) {
+                var numeroLeido = numero.value;
+                try {
+                    juego.PruebaCon(+numeroLeido);
+                    mensaje.textContent = juego.mensaje;
+                    if (juego.intentos < 10 && !juego.encontrado) {
+                        pideNumero.textContent = `Dame tu número ${juego.Intento} de ${juego.MaxIntentos}:`;
+                    } else {
+                        FinalJuego();
+                    }
+                } catch (error) {
+                    mensaje.textContent = 'ERROR: ' + error.message;
+                    FinalJuego();
+                }
+            }
+            ev.preventDefault();
+        });
+        btnJugar.addEventListener('click', Empezar);
+    </script>
+</body>
+
+</html>
